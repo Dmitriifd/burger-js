@@ -7,6 +7,7 @@ import {
 	modalProductPriceCount,
 	ingredientsList,
 	modalProduct,
+	modalProductBtn,
 } from './elements.js'
 import { getData } from './getData.js'
 
@@ -27,6 +28,7 @@ export const openModal = async (id) => {
 	modalProductDescription.textContent = product.description
 	ingredientsCalories.textContent = `${product.weight} кг, калл ${product.calories}`
 	modalProductPriceCount.textContent = product.price
+	modalProductBtn.dataset.idProduct = product.id
 
 	modalProduct.classList.add('modal_open')
 }

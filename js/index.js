@@ -3,6 +3,7 @@ import { navigationListController } from './navigationListController.js'
 import { openModal } from './openModal.js'
 import { closeModal } from './closeModal.js'
 import { renderListProduct } from './renderListProduct.js'
+import { cartInit } from './cart.js'
 
 
 catalogList.addEventListener('click', ({ target }) => {
@@ -21,6 +22,7 @@ modalProduct.addEventListener('click', ({ target }) => {
 const init = () => {
 	renderListProduct()
 	navigationListController(renderListProduct)
+	cartInit()
 }
 
 init()
