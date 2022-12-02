@@ -127,6 +127,7 @@
 .order__submit:disabled {
 	background-color: #f9f9f9;
 	color: #acacac;
+	cursor: no-drop;
 }
 
 .order__appeal {
