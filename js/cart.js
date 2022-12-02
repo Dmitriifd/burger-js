@@ -37,11 +37,11 @@ const renderCartList = async () => {
 			</div>
 
 			<div class="order__product-count count">
-				<button class="count__minus">-</button>
+				<button class="count__minus" data-id-product=${product.id}>-</button>
 
 				<p class="count__amount">${product.count}</p>
 
-				<button class="count__plus">+</button>
+				<button class="count__plus" data-id-product=${product.id}>+</button>
 			</div>
 		`
 		return li
@@ -75,7 +75,15 @@ const addCart = (id, count = 1) => {
 }
 
 const removeCart = (id) => {
-	
+	const cartList = getCart()
+	const productIndex = cartList.findIndex((item) => item.id === id)
+	cartList[productIndex].count -= 1
+
+	if (cartList[productIndex].count === 0) {
+		cartList.splice(productIndex, 1)
+	}
+
+	updateCartList(cartList)
 }
 
 const cartController = () => {
@@ -88,6 +96,21 @@ const cartController = () => {
 	modalProductBtn.addEventListener('click', () => {
 		addCart(modalProductBtn.dataset.idProduct, +countAmount.textContent)
 	})
+
+	orderList.addEventListener('click', ({ target }) => {
+		const targetPlus = target.closest('.count__plus')
+		const targetMinus = target.closest('.count__minus')
+
+		if (targetPlus) {
+			addCart(targetPlus.dataset.idProduct)
+		}
+
+		if (targetMinus) {
+			removeCart(targetMinus.dataset.idProduct)
+		}
+
+	})
+
 }
 
 export const cartInit = () => {
