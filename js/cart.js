@@ -1,20 +1,18 @@
-import { API_URL, PREFIX_PRODUCT } from './const.js'
 import {
 	catalogList,
-	countAmount,
-	modalProductBtn,
+	modalDelivery,
+	order,
 	orderCount,
 	orderList,
-	orderTotalAmout,
-	order,
-	orderWrapTitle,
 	orderSubmit,
-	modalDelivery,
+	orderTotalAmount,
+	orderWrapTitle,
 } from './elements.js'
 import { getData } from './getData.js'
+import { API_URL, PREFIX_PRODUCT } from './const.js'
 import { orderController } from './orderController.js'
 
-export const getCart = () => {
+const getCart = () => {
 	const cartList = localStorage.getItem('cart')
 	if (cartList) {
 		return JSON.parse(cartList)
@@ -27,9 +25,9 @@ const renderCartList = async () => {
 	const cartList = getCart()
 
 	orderSubmit.disabled = !cartList.length
-
 	const allIdProduct = cartList.map((item) => item.id)
 	const data = cartList.length ? await getData(`${API_URL}${PREFIX_PRODUCT}?list=${allIdProduct}`) : []
+
 	const countProduct = cartList.reduce((acc, item) => acc + item.count, 0)
 	orderCount.textContent = countProduct
 
@@ -41,30 +39,32 @@ const renderCartList = async () => {
 		const product = cartList.find((cartItem) => cartItem.id === item.id)
 
 		li.innerHTML = `
-			<img src="${API_URL}/${item.image}" alt="${item.title}" class="order__image">
+      <img src="${API_URL}/${item.image}" alt="${item.title}" class="order__image">
 
-			<div class="order__product">
-				<h3 class="order__product-title">${item.title}</h3>
+      <div class="order__product">
+        <h3 class="order__product-title">${item.title}</h3>
 
-				<p class="order__product-weight">${item.weight}г</p>
+        <p class="order__product-weight">${item.weight}г</p>
 
-				<p class="order__product-price">${item.price} ₽</p>
-			</div>
+        <p class="order__product-price">${item.price}₽</p>
+      </div>
 
-			<div class="order__product-count count">
-				<button class="count__minus" data-id-product=${product.id}>-</button>
+      <div class="order__product-count count">
+        <button class="count__minus" data-id-product=${product.id}>-</button>
 
-				<p class="count__amount">${product.count}</p>
+        <p class="count__amount">${product.count}</p>
 
-				<button class="count__plus" data-id-product=${product.id}>+</button>
-			</div>
-		`
+        <button class="count__plus" data-id-product=${product.id}>+</button>
+      </div>
+    `
+
 		return li
 	})
 
 	orderList.textContent = ''
 	orderList.append(...cartItems)
-	orderTotalAmout.textContent = data.reduce((acc, item) => {
+
+	orderTotalAmount.textContent = data.reduce((acc, item) => {
 		const product = cartList.find((cartItem) => cartItem.id === item.id)
 		return acc + item.price * product.count
 	}, 0)
@@ -75,22 +75,16 @@ const updateCartList = (cartList) => {
 	renderCartList()
 }
 
-export const clearCart = () => {
-	localStorage.removeItem('cart')
-	renderCartList()
-}
-
-const addCart = (id, count = 1) => {
+export const addCart = (id, count = 1) => {
 	const cartList = getCart()
 	const product = cartList.find((item) => item.id === id)
+
 	if (product) {
 		product.count += count
 	} else {
-		cartList.push({
-			id,
-			count,
-		})
+		cartList.push({ id, count })
 	}
+
 	updateCartList(cartList)
 }
 
@@ -106,15 +100,16 @@ const removeCart = (id) => {
 	updateCartList(cartList)
 }
 
+export const clearCart = () => {
+	localStorage.removeItem('cart')
+	renderCartList()
+}
+
 const cartController = () => {
 	catalogList.addEventListener('click', ({ target }) => {
 		if (target.closest('.product__add')) {
 			addCart(target.closest('.product').dataset.idProduct)
 		}
-	})
-
-	modalProductBtn.addEventListener('click', () => {
-		addCart(modalProductBtn.dataset.idProduct, +countAmount.textContent)
 	})
 
 	orderList.addEventListener('click', ({ target }) => {
@@ -139,7 +134,7 @@ const cartController = () => {
 	})
 
 	modalDelivery.addEventListener('click', ({ target }) => {
-		if (target.closest('.modal__close') ||  modalDelivery === target) {
+		if (target.closest('.modal__close') || modalDelivery === target) {
 			modalDelivery.classList.remove('modal_open')
 		}
 	})
