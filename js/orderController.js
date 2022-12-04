@@ -1,5 +1,5 @@
-import { clearCart } from './cart.js';
-import { modalDeliveryContainer, modalDeliveryForm } from './elements.js';
+import { clearCart } from './cart.js'
+import { modalDelivery, modalDeliveryContainer, modalDeliveryForm } from './elements.js'
 
 export const orderController = (getCart) => {
 	const checkDelivery = () => {
@@ -19,8 +19,8 @@ export const orderController = (getCart) => {
 		const formData = new FormData(modalDeliveryForm)
 		const data = Object.fromEntries(formData)
 		data.order = getCart()
-		
-		fetch('https://s63895b67c5356b25a2feb4a8.mockapi.io/order', {
+
+		fetch('https://reqres.in/api/users', {
 			method: 'POST',
 			body: JSON.stringify(data),
 		})
@@ -30,13 +30,16 @@ export const orderController = (getCart) => {
 				modalDeliveryContainer.innerHTML = `
 					<h2>Спасибо за заказ</h2>
 					<h3>Ваш номер заказа ${data.id}</h3>
-					<p>С вами в ближайшее время свяжется наш менеджер ${data.manager}</p>
+					<p>С вами в ближайшее время свяжется наш менеджер</p>
 				`
-
-				modalDeliveryForm.reset()
-				checkDelivery()
-			}).catch((e) => {
-				console.log(e.message);
+				setTimeout(() => {
+					modalDelivery.classList.remove('modal_open')
+				}, 2000)
+				// modalDeliveryForm.reset()
+				// checkDelivery()
+			})
+			.catch((e) => {
+				console.log(e.message)
 			})
 	})
 }

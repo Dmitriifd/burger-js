@@ -1,5 +1,6 @@
 .modal-delivery {
   --gap: 8px;
+	min-height: 400px;
 }
 
 .modal-delivery__container {
