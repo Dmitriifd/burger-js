@@ -75,6 +75,11 @@ const updateCartList = (cartList) => {
 	renderCartList()
 }
 
+export const clearCart = () => {
+	localStorage.removeItem('cart')
+	renderCartList()
+}
+
 const addCart = (id, count = 1) => {
 	const cartList = getCart()
 	const product = cartList.find((item) => item.id === id)
